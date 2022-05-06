@@ -14,12 +14,37 @@ int main(int args, char * argv[])
 
 	bool running = true;
 	std::shared_ptr<Snake> snake = std::make_shared<Snake>(250, 250, 10, 10);
-	snake->add_part(2);
+	snake->add_part(1);
 
 
 	Arena arena(500,500);
 	arena.create_wall(Arena::AROUND, 10);
 	arena.create_food(10);
+	bool menu = true;
+	while(menu)
+	{
+		SDL_Rect button{ 150, 200, 200, 50 };
+		SDL_SetRenderDrawColor(renderer, 34, 47, 91, 255);
+		SDL_RenderFillRect(renderer, &button);
+
+		int x, y;
+		Uint32 buttons;
+		SDL_PumpEvents();
+		buttons = SDL_GetMouseState(&x, &y);
+
+		if ((buttons & SDL_BUTTON_LMASK) != 0) {
+			if (x >= button.x && y >= button.y && x <= button.x + button.w && y <= button.y + button.h)
+			{
+				SDL_Log("Game started");
+				menu = false;
+			}
+		}
+
+		SDL_RenderPresent(renderer);
+		SDL_Delay(30);
+	}
+
+	SDL_Delay(200);
 
 	while(running)
 	{
@@ -54,8 +79,7 @@ int main(int args, char * argv[])
 
 
 		//Draw snake
-		SDL_SetRenderDrawColor(renderer, 34,47,91, 255);
-
+		SDL_SetRenderDrawColor(renderer, 34, 47, 91, 255);
 		for (const auto& part : snake ->get_parts())
 			SDL_RenderFillRect(renderer, new SDL_Rect{ part->posX, part->posY, 10, 10 });
 		
